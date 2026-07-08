@@ -2,8 +2,11 @@
 package br.com.fiap.techchalleger.restaurantescleanarch.infra.config;
 
 import br.com.fiap.techchalleger.restaurantescleanarch.core.controller.UsuarioTipoController;
+import br.com.fiap.techchalleger.restaurantescleanarch.core.controller.UsuarioController;
 import br.com.fiap.techchalleger.restaurantescleanarch.core.gateway.UsuarioTipoGateway;
+import br.com.fiap.techchalleger.restaurantescleanarch.core.gateway.UsuarioGateway;
 import br.com.fiap.techchalleger.restaurantescleanarch.core.mapper.UsuarioTipoMapper;
+import br.com.fiap.techchalleger.restaurantescleanarch.core.mapper.UsuarioMapper;
 import br.com.fiap.techchalleger.restaurantescleanarch.core.usecase.CriarUsuarioTipoUseCase;
 import br.com.fiap.techchalleger.restaurantescleanarch.core.usecase.CriarUsuarioTipoUseCaseImpl;
 import br.com.fiap.techchalleger.restaurantescleanarch.core.usecase.ListarUsuarioTipoUseCase;
@@ -12,6 +15,8 @@ import br.com.fiap.techchalleger.restaurantescleanarch.core.usecase.AtualizarUsu
 import br.com.fiap.techchalleger.restaurantescleanarch.core.usecase.AtualizarUsuarioTipoUseCaseImpl;
 import br.com.fiap.techchalleger.restaurantescleanarch.core.usecase.DeletarUsuarioTipoUseCase;
 import br.com.fiap.techchalleger.restaurantescleanarch.core.usecase.DeletarUsuarioTipoUseCaseImpl;
+import br.com.fiap.techchalleger.restaurantescleanarch.core.usecase.AtualizarUsuarioUseCase;
+import br.com.fiap.techchalleger.restaurantescleanarch.core.usecase.AtualizarUsuarioUseCaseImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -59,5 +64,27 @@ public class InjecaoDependenciaConfiguration {
     @Bean
     public UsuarioTipoMapper usuarioTipoMapper() {
         return new UsuarioTipoMapper();
+    }
+
+    @Bean
+    AtualizarUsuarioUseCase atualizarUsuarioUseCase(UsuarioGateway usuarioGateway) {
+        return new AtualizarUsuarioUseCaseImpl(usuarioGateway);
+    }
+
+    @Bean
+    UsuarioController usuarioController(
+            AtualizarUsuarioUseCase atualizarUsuarioUseCase,
+            UsuarioMapper usuarioMapper,
+            UsuarioGateway usuarioGateway) {
+
+        return new UsuarioController(
+                atualizarUsuarioUseCase,
+                usuarioMapper,
+                usuarioGateway);
+    }
+
+    @Bean
+    public UsuarioMapper usuarioMapper() {
+        return new UsuarioMapper();
     }
 }
