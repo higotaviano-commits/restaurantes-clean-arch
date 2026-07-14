@@ -12,10 +12,8 @@ public class UsuarioTipo {
 
     public UsuarioTipo(Long id, String tipo) {
 
-        if (!tipo.equalsIgnoreCase("CLIENTE")
-                && !tipo.equalsIgnoreCase("DONO_RESTAURANTE")) {
-
-            throw new IllegalArgumentException("Tipo de usuário inválido: " + tipo);
+        if (tipo == null || tipo.isBlank()) {
+            throw new IllegalArgumentException("Nome do tipo de usuário não pode ser nulo ou vazio.");
         }
 
         this.id = id;

@@ -35,6 +35,124 @@ class UsuarioControllerIT {
     }
 
     @Test
+    @DisplayName("Deve criar usuário")
+    void deveCriarUsuario() {
+
+        UsuarioJson dto = new UsuarioJson(
+                null,
+                "Maria",
+                "maria@teste.com",
+                "123456",
+                TIPO_CLIENTE);
+
+        ResponseEntity<String> response =
+                restTemplate.postForEntity("/usuarios", dto, String.class);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertTrue(response.getBody().contains("ID:"));
+
+        assertEquals(1, usuarioRepository.count());
+    }
+
+    @Test
+    @DisplayName("Deve retornar conflito ao criar usuário com e-mail já cadastrado")
+    void deveRetornarConflitoAoCriarUsuarioComEmailDuplicado() {
+
+        criarUsuario();
+
+        UsuarioJson dto = new UsuarioJson(
+                null,
+                "Outro João",
+                "joao@teste.com",
+                "654321",
+                TIPO_CLIENTE);
+
+        ResponseEntity<String> response =
+                restTemplate.postForEntity("/usuarios", dto, String.class);
+
+        assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
+    }
+
+    @Test
+    @DisplayName("Deve listar usuários")
+    void deveListarUsuarios() {
+
+        criarUsuario();
+
+        ResponseEntity<UsuarioJson[]> response =
+                restTemplate.getForEntity("/usuarios", UsuarioJson[].class);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+
+        UsuarioJson[] usuarios = response.getBody();
+
+        assertNotNull(usuarios);
+        assertEquals(1, usuarios.length);
+    }
+
+    @Test
+    @DisplayName("Deve buscar usuário por id")
+    void deveBuscarUsuarioPorId() {
+
+        UsuarioEntity usuario = criarUsuario();
+
+        ResponseEntity<UsuarioJson> response =
+                restTemplate.getForEntity(
+                        "/usuarios/{id}",
+                        UsuarioJson.class,
+                        usuario.getId());
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+
+        UsuarioJson json = response.getBody();
+
+        assertNotNull(json);
+        assertEquals(usuario.getId(), json.getId());
+        assertEquals(usuario.getNome(), json.getNome());
+        assertEquals(usuario.getEmail(), json.getEmail());
+    }
+
+    @Test
+    @DisplayName("Deve retornar 404 ao buscar usuário inexistente")
+    void deveRetornar404AoBuscarUsuarioInexistente() {
+
+        ResponseEntity<String> response =
+                restTemplate.getForEntity(
+                        "/usuarios/{id}",
+                        String.class,
+                        99999L);
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
+
+    @Test
+    @DisplayName("Deve deletar usuário")
+    void deveDeletarUsuario() {
+
+        UsuarioEntity usuario = criarUsuario();
+
+        restTemplate.delete("/usuarios/{id}", usuario.getId());
+
+        assertFalse(usuarioRepository.existsById(usuario.getId()));
+    }
+
+    @Test
+    @DisplayName("Deve retornar 404 ao deletar usuário inexistente")
+    void deveRetornar404AoDeletarUsuarioInexistente() {
+
+        ResponseEntity<Void> response =
+                restTemplate.exchange(
+                        "/usuarios/{id}",
+                        HttpMethod.DELETE,
+                        null,
+                        Void.class,
+                        99999L);
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
+
+    @Test
     @DisplayName("Deve atualizar tipo do usuário")
     void deveAtualizarUsuarioTipo() {
 

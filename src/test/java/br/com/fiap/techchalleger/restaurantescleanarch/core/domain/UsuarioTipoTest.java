@@ -1,5 +1,6 @@
 package br.com.fiap.techchalleger.restaurantescleanarch.core.domain;
 
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
@@ -11,14 +12,17 @@ public class UsuarioTipoTest {
     @ParameterizedTest
     @ValueSource(strings = {
             "",
-            "ADMIN",
-            "GERENTE",
-            "DONO",
-            "123"
+            "   "
     })
-    void deveRejeitarTiposInvalidos(String tipo) {
+    void deveRejeitarNomeDoTipoEmBranco(String tipo) {
         assertThrows(IllegalArgumentException.class,
                 () -> new UsuarioTipo(tipo));
+    }
+
+    @Test
+    void deveRejeitarNomeDoTipoNulo() {
+        assertThrows(IllegalArgumentException.class,
+                () -> new UsuarioTipo(null));
     }
 
     @ParameterizedTest
@@ -26,9 +30,12 @@ public class UsuarioTipoTest {
             "CLIENTE",
             "cliente",
             "DONO_RESTAURANTE",
-            "dono_restaurante"
+            "dono_restaurante",
+            "ADMIN",
+            "GERENTE",
+            "Entregador"
     })
-    void devePermitirTiposValidos(String tipo) {
+    void devePermitirQualquerNomeDeTipoNaoVazio(String tipo) {
         UsuarioTipo usuarioTipo = new UsuarioTipo(tipo);
 
         assertEquals(tipo, usuarioTipo.getTipo());

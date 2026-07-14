@@ -45,6 +45,19 @@ public class UsuarioTipoJpaGateway implements UsuarioTipoGateway {
     }
 
     @Override
+    public UsuarioTipo buscarPorId(Long id) {
+        try {
+            Optional<UsuarioTipoEntity> optional = usuarioTipoRepository.findById(id);
+            if (optional.isEmpty()) {
+                return null;
+            }
+            return usuarioTipoEntityMapper.toDomain(optional.get());
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao buscar tipo de usuário por ID", e);
+        }
+    }
+
+    @Override
     public UsuarioTipo atualizarUsuarioTipo(Long id, UsuarioTipo tipo) {
         try {
             Optional<UsuarioTipoEntity> optional = usuarioTipoRepository.findById(id);
