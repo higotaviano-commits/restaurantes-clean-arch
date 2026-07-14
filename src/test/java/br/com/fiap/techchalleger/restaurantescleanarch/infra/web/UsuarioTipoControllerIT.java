@@ -72,6 +72,40 @@ class UsuarioTipoControllerIT {
     }
 
     @Test
+    @DisplayName("Deve buscar tipo de usuário por id")
+    void deveBuscarUsuarioTipoPorId() {
+
+        UsuarioTipoEntity tipo = criarTipo("CLIENTE");
+
+        ResponseEntity<UsuarioTipoJson> response =
+                restTemplate.getForEntity(
+                        "/usuarios-tipos/{id}",
+                        UsuarioTipoJson.class,
+                        tipo.getId());
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+
+        UsuarioTipoJson json = response.getBody();
+
+        assertNotNull(json);
+        assertEquals(tipo.getId(), json.getId());
+        assertEquals("CLIENTE", json.getTipo());
+    }
+
+    @Test
+    @DisplayName("Deve retornar 404 ao buscar tipo de usuário inexistente")
+    void deveRetornar404AoBuscarUsuarioTipoInexistente() {
+
+        ResponseEntity<String> response =
+                restTemplate.getForEntity(
+                        "/usuarios-tipos/{id}",
+                        String.class,
+                        99999L);
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
+
+    @Test
     @DisplayName("Deve atualizar tipo de usuário")
     void deveAtualizarUsuarioTipo() {
 

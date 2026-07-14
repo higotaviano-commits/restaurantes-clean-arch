@@ -5,6 +5,7 @@ import br.com.fiap.techchalleger.restaurantescleanarch.core.dto.CriarUsuarioTipo
 import br.com.fiap.techchalleger.restaurantescleanarch.core.mapper.UsuarioTipoMapper;
 import br.com.fiap.techchalleger.restaurantescleanarch.core.usecase.CriarUsuarioTipoUseCase;
 import br.com.fiap.techchalleger.restaurantescleanarch.core.usecase.ListarUsuarioTipoUseCase;
+import br.com.fiap.techchalleger.restaurantescleanarch.core.usecase.BuscarUsuarioTipoUseCase;
 import br.com.fiap.techchalleger.restaurantescleanarch.core.usecase.AtualizarUsuarioTipoUseCase;
 import br.com.fiap.techchalleger.restaurantescleanarch.core.usecase.DeletarUsuarioTipoUseCase;
 import br.com.fiap.techchalleger.restaurantescleanarch.core.domain.UsuarioTipo;
@@ -15,17 +16,20 @@ public class UsuarioTipoController {
 
     private final CriarUsuarioTipoUseCase criarUsuarioTipoUseCase;
     private final ListarUsuarioTipoUseCase listarUsuarioTipoUseCase;
+    private final BuscarUsuarioTipoUseCase buscarUsuarioTipoUseCase;
     private final AtualizarUsuarioTipoUseCase atualizarUsuarioTipoUseCase;
     private final DeletarUsuarioTipoUseCase deletarUsuarioTipoUseCase;
     private final UsuarioTipoMapper usuarioTipoMapper;
 
     public UsuarioTipoController(CriarUsuarioTipoUseCase criarUsuarioTipoUseCase,
                                  ListarUsuarioTipoUseCase listarUsuarioTipoUseCase,
+                                 BuscarUsuarioTipoUseCase buscarUsuarioTipoUseCase,
                                  AtualizarUsuarioTipoUseCase atualizarUsuarioTipoUseCase,
                                  DeletarUsuarioTipoUseCase deletarUsuarioTipoUseCase,
                                  UsuarioTipoMapper usuarioTipoMapper) {
         this.criarUsuarioTipoUseCase = criarUsuarioTipoUseCase;
         this.listarUsuarioTipoUseCase = listarUsuarioTipoUseCase;
+        this.buscarUsuarioTipoUseCase = buscarUsuarioTipoUseCase;
         this.atualizarUsuarioTipoUseCase = atualizarUsuarioTipoUseCase;
         this.deletarUsuarioTipoUseCase = deletarUsuarioTipoUseCase;
         this.usuarioTipoMapper = usuarioTipoMapper;
@@ -39,6 +43,10 @@ public class UsuarioTipoController {
 
     public List<UsuarioTipo> listarUsuarioTipo() {
         return listarUsuarioTipoUseCase.listarUsuarioTipo();
+    }
+
+    public UsuarioTipo buscarPorId(Long id) {
+        return buscarUsuarioTipoUseCase.buscarPorId(id);
     }
 
     public UsuarioTipo atualizarUsuarioTipo(Long id, CriarUsuarioTipoDto dto) {

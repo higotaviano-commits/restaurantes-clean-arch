@@ -9,6 +9,8 @@ public interface UsuarioTipoGateway {
 
     List<UsuarioTipo> listarUsuarioTipo();
 
+    UsuarioTipo buscarPorId(Long id);
+
     UsuarioTipo atualizarUsuarioTipo(Long id, UsuarioTipo tipo);
 
     void deletarUsuarioTipo(Long id);

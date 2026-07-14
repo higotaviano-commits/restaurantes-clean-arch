@@ -41,6 +41,12 @@ public class UsuarioTipoApiController {
                 .collect(Collectors.toList());
     }
 
+    @GetMapping("/{id}")
+    public UsuarioTipoJson buscarPorId(@PathVariable Long id) {
+        UsuarioTipo usuarioTipo = usuarioTipoController.buscarPorId(id);
+        return new UsuarioTipoJson(usuarioTipo.getId(), usuarioTipo.getTipo());
+    }
+
     @PutMapping("/{id}")
     public UsuarioTipoJson atualizar(@PathVariable Long id, @RequestBody UsuarioTipoJson usuarioTipoJson) {
         UsuarioTipo updated = usuarioTipoController.atualizarUsuarioTipo(id, mapToDto(usuarioTipoJson));
